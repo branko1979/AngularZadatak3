@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class UsersComponent implements OnInit{
 
+  listaTehnologija: any;
   // sledeca f-ja sluzi za proveru password i repeatPassword
   passwordMatchValidator(form:FormGroup){
     const password = form.get('password'); // kupi pojedinacnu vrednost  iz input polja
@@ -20,31 +21,51 @@ export class UsersComponent implements OnInit{
       confirmPassword?.setErrors(null);
     }
   }
-  userForm!: FormGroup;
+  userForm: FormGroup;
   dataSource =new MatTableDataSource<any>()
   displayColumns = ['ime','prezime','email','password','action'];
 
   constructor(private fb:FormBuilder){
-  }
-
-  ngOnInit(): void{
-    this.userForm = this.fb.group({
+    /*this.userForm = this.fb.group({
       id:[0,[Validators.required]],
       firstName:["",[Validators.required]],
       secondName:["",[Validators.required]],
       email:["",[Validators.required, Validators.email]],
       password:["",[Validators.required]],
-      confirmPassword:["",[Validators.required]]
+      confirmPassword:["",[Validators.required]],
+      applicationItems: this.fb.array([])
+    });*/
+  }
+
+  ngOnInit(): void{
+    this.userForm = this.fb.group({
+      id: [0, [Validators.required]],
+      firstName: ["", [Validators.required]],
+      secondName: ["", [Validators.required]],
+      email: ["", [Validators.required, Validators.email]],
+      password: ["", [Validators.required]],
+      confirmPassword: ["", [Validators.required]],
+      applicationItems: this.fb.array([this.createApplicationFormGroup()])
     },{
     validator:this.passwordMatchValidator
     }
     )
-    this.dataSource.data = JSON.parse(localStorage.getItem('userForm')??'');
+    this.dataSource.data = JSON.parse(localStorage.getItem('userForm'));
+    this.ucitajTehnologije();
+  }
+
+  createApplicationFormGroup(): FormGroup{
+    return new FormGroup({
+      datumAplikacije: new FormControl(null, Validators.required),
+      nazivTehnologije: new FormControl("",Validators.required),
+      nazivAplikacije: new FormControl("",Validators.required),
+    })
   }
 
   save(){ //cuva se samo u local Storage, da se ne bi komplikovalo sa Api i bazama podataka
     //const userData: any[] = null; 
-    const userData: any[] = [];
+    console.log(this.userForm.getRawValue())
+    /*const userData: any[] = [];
 
     const data = this.userForm.getRawValue();
     if(this.userForm.valid){
@@ -81,7 +102,7 @@ export class UsersComponent implements OnInit{
         alert("Korisnik uspesno kreiran !")
     }else{
       alert("Neophodno je uneti ispravne podatke!")
-    }
+    }*/
 
   }
   delete(data: any){
@@ -94,5 +115,23 @@ export class UsersComponent implements OnInit{
     this.dataSource.data = JSON.parse(localStorage.getItem('userForm')??'');
   }
 
+  public addFormGroup(){
+    const appItems = this.userForm.get('applicationItems') as FormArray;
+    appItems.push(this.createApplicationFormGroup())
+  }
 
+  public removeFormGroup(i: number){
+    const appItems = this.userForm.get('applicationItems') as FormArray;
+    if(appItems.length > 0){
+      appItems.removeAt(i);
+    }else{
+      //appItems.reset();
+    }
+  }
+
+  public ucitajTehnologije(){
+    this.listaTehnologija =[
+      {id:1,naziv:"C#"}, {id:2, naziv:"Angular"},{id:3, naziv:"Java"}
+    ]
+  }
 }

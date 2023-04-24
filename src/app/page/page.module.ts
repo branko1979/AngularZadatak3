@@ -9,7 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { PortalModule } from '@angular/cdk/portal';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule} from '@angular/material/input';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSortModule } from '@angular/material/sort';
@@ -18,6 +18,9 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import { LoginComponent } from './login/login.component'
 import { AvatarModule } from 'ngx-avatar';
 import { UsersComponent } from './users/users.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 
 @NgModule({
@@ -42,7 +45,10 @@ import { UsersComponent } from './users/users.component';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    AvatarModule
+    AvatarModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports: [
     CommonModule,
@@ -57,7 +63,10 @@ import { UsersComponent } from './users/users.component';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    AvatarModule
+    AvatarModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class PageModule { }
